@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="assets/pokedex.png" type="image/x-icon" />
+      <link rel="stylesheet" href="style.css" />
+      <script type="module" src="./pokemon.js" defer></script>
+      <script type="module" src="index.js" defer></script>
+      <title>Pokedex - damigand</title>
+   </head>
+   <body>
+      <header>
+         <ul>
+            <li><img class="logo" src="./assets/pokedex.png" alt="Pokedex" /></li>
+            <li class="search-bar">
+               <img class="h-25" src="assets/search.svg" alt="magnifying glass" /><input
+                  type="text"
+                  name="buscar"
+                  id="buscar"
+                  placeholder="Buscar un pokemon" />
+            </li>
+         </ul>
+      </header>
+      <main>
+         <section class="filters"></section>
+         <section class="pokemons"></section>
+      </main>
+      <footer></footer>
+   </body>
+</html>
