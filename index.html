@@ -24,7 +24,32 @@
          </ul>
       </header>
       <main>
-         <section class="filters"></section>
+         <section class="filters">
+            <h2>FILTROS</h2>
+            <article class="filter filter-trainers">
+               <h4>Entrenador</h4>
+               <select name="trainers" id="trainers">
+                  <option value="" selected>-- Seleccionar --</option>
+                  <option value="aurora skyheart">Aurora Skyheart</option>
+                  <option value="ashlyn shadowcaster">Ashlyn Shadowcaster</option>
+                  <option value="ivy whisperleaf">Ivy Whisperleaf</option>
+                  <option value="lily shadow">Lily Shadow</option>
+                  <option value="flint raptor">Flint Raptor</option>
+                  <option value="axel emberstrike">Axel Emberstrike</option>
+               </select>
+            </article>
+            <article class="filter filter-level">
+               <h4>Nivel</h4>
+               <div>
+                  <input type="number" name="level" id="level" min="1" max="100" />
+                  <button class="button-level">Buscar</button>
+               </div>
+            </article>
+            <article class="filter filter-types">
+               <h4>Tipos</h4>
+            </article>
+            <article class="counter"></article>
+         </section>
          <section class="pokemons"></section>
       </main>
       <footer></footer>
