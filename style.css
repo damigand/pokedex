@@ -18,6 +18,29 @@
    --terciary: #1c2321;
 }
 
+/*ANIMACIONES REUSABLES*/
+@keyframes borderHover {
+   0% {
+      border: 2px solid transparent;
+   }
+
+   100% {
+      border: 2px solid var(--secondary);
+   }
+}
+
+@keyframes borderHoverOut {
+   0% {
+      border: 2px solid var(--secondary);
+   }
+
+   100% {
+      border: 2px solid transparent;
+   }
+}
+
+/*ESTILOS*/
+
 header {
    margin: 0px var(--general-margin);
    max-height: 105px;
@@ -39,12 +62,30 @@ header > ul {
    height: 25px;
 }
 
+.hw-120 {
+   height: 120px;
+   width: 120px;
+}
+
+.absolute {
+   position: absolute;
+}
+
+.relative {
+   position: relative;
+}
+
 .search-bar {
    padding: 10px;
    display: flex;
    gap: 10px;
    border: 2px solid var(--secondary);
    border-radius: 15px;
+}
+
+.clearSearch {
+   padding: 3px;
+   cursor: pointer;
 }
 
 #buscar {
@@ -59,10 +100,6 @@ main {
    gap: 10px;
 }
 
-.filters {
-   border-right: 1px solid var(--secondary);
-}
-
 .pokemons {
    display: grid;
    grid-template-columns: repeat(auto-fill, 150px);
@@ -72,29 +109,107 @@ main {
 
 .pokemon {
    padding: 5px;
-   position: relative;
    display: flex;
    flex-direction: column;
    height: auto;
    align-items: center;
-   max-height: 220px;
-   border: 1px solid transparent;
+   min-height: 220px;
+   max-height: 230px;
+   border: 2px solid transparent;
+   border-radius: 5px;
+   text-align: center;
+   perspective: 1000px;
 }
 
-.pokemon > * {
+.pokemon *:not(.pk-image) {
    background-color: transparent;
 }
 
+.pk-card {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   position: relative;
+   width: 100%;
+   height: 100%;
+   text-align: center;
+   transition: transform 0.8s;
+   transform-style: preserve-3d;
+}
+
+.pk-front,
+.pk-back {
+   position: absolute;
+   backface-visibility: hidden;
+}
+
+.pk-back {
+   transform: rotateY(180deg);
+}
+
+.pk-img img {
+   top: 0;
+   bottom: 0;
+   left: 50%;
+   transform: translateX(-50%);
+   margin: auto;
+}
+
 .pokemon:hover {
-   background-color: var(--primary);
-   border: 1px solid var(--secondary);
-   border-radius: 10px;
+   animation-name: borderHover;
+   animation-duration: 0.5s;
+   animation-fill-mode: forwards;
+   cursor: pointer;
+}
+
+.border-hoverOut {
+   animation-name: borderHoverOut;
+   animation-duration: 0.5s;
+   animation-fill-mode: forwards;
+}
+
+@keyframes imgHover {
+   0% {
+      width: 120px;
+   }
+
+   100% {
+      width: 140px;
+   }
+}
+
+.pokemon:hover img {
+   animation-name: imgHover;
+   animation-duration: 0.5s;
+   animation-fill-mode: forwards;
+}
+
+@keyframes imgHoverOut {
+   0% {
+      width: 140px;
+   }
+
+   100% {
+      width: 120px;
+   }
+}
+
+.img-hoverout {
+   animation-name: imgHoverOut;
+   animation-duration: 0.5s;
+   animation-fill-mode: forwards;
+}
+
+.extra-info {
+   position: absolute;
+   opacity: 0%;
 }
 
 .types {
    position: relative;
    display: flex;
    gap: 5px;
+   justify-content: center;
 }
 
 .type {
@@ -107,13 +222,14 @@ main {
    display: grid;
    grid-template-rows: repeat(3, minmax(25px, 40px)) 1fr 1fr;
    gap: 15px;
-   border: 1px solid transparent;
-   border-right: 1px solid var(--secondary);
+   border: 2px solid transparent;
+   border-radius: 5px;
 }
 
 .filters:hover {
-   border: 1px solid var(--secondary);
-   border-radius: 5px;
+   animation-name: borderHover;
+   animation-duration: 0.5s;
+   animation-fill-mode: forwards;
 }
 
 .filters h2 {
@@ -167,4 +283,35 @@ button {
 button[class*='filter-'] {
    cursor: pointer;
    font-size: 14px;
+}
+
+.empty {
+   display: grid;
+   grid-template-columns: 1fr;
+   grid-template-rows: 50px;
+}
+
+@keyframes messageAnimation {
+   from {
+      font-size: 17px;
+   }
+   to {
+      font-size: 16px;
+   }
+}
+
+.message {
+   animation-name: messageAnimation;
+   animation-duration: 0.3s;
+   text-align: center;
+   align-self: center;
+}
+
+.recommended {
+   display: flex;
+   justify-content: space-between;
+}
+
+.recommended > .pokemon {
+   min-width: 150px;
 }
