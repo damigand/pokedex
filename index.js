@@ -1,14 +1,17 @@
 import { pokemons, types } from '/pokemon.js';
 
+//Constantes de elementos que serán utilizados
 const counter = document.querySelector('.counter');
 const searchInput = document.querySelector('#buscar');
 const clearSearch = document.querySelector('.clearSearch');
 const filterTypesArticle = document.querySelector('.filter-types');
 const trainerSelect = document.querySelector('#trainers');
 const levelButton = document.querySelector('.button-level');
+const clearFiltersInput = document.querySelector('.reset');
 let selectedTypeButton;
 
-const filter = () => {
+//Es el método por "excelencia" de los filtros. Va filtrando en cascada.
+const filter = (clearFilters = false) => {
    let filteredList = pokemons;
    const search = searchInput.value;
    const trainer = trainerSelect.value;
@@ -55,20 +58,26 @@ const filter = () => {
       }
       filteredList = newList;
    }
-
    showPokemon(filteredList, true);
 };
 
 trainerSelect.addEventListener('change', filter);
 levelButton.addEventListener('click', filter);
 
+//Actualiza el contador de resultados.
 const updateCounter = (size) => {
    counter.innerText = `${size} de ${size} resultados`;
 };
 
-//Seleccionar el tipo de pokemon y cambiar aspetos generalmente visuales.
-const selectType = (event) => {
-   let newTypeButton = event.target;
+//Selecciona el tipo de pokemon y cambia aspetos generalmente visuales.
+const selectType = (param, clear = false) => {
+   let newTypeButton;
+   if (clear) {
+      newTypeButton = param;
+   } else {
+      newTypeButton = param.target;
+   }
+
    let type = newTypeButton.innerText;
 
    if (selectedTypeButton) {
@@ -88,10 +97,12 @@ const selectType = (event) => {
       newTypeButton.style.border = `1px solid ${types[type]}`;
       selectedTypeButton = newTypeButton;
    }
-   filter();
+   if (!clear) {
+      filter();
+   }
 };
 
-//Pinta los botones para filtrar por tipo de pokemon
+//Pinta los botones utilizados para filtrar por tipo de pokemon
 const showFilterTypes = (types) => {
    const typesDiv = document.createElement('div');
    typesDiv.classList.add('allTypes');
@@ -100,6 +111,7 @@ const showFilterTypes = (types) => {
       let typeButton = document.createElement('button');
       typeButton.classList.add(`filter-${type}`);
       typeButton.innerText = type;
+      typeButton.setAttribute('type', 'button');
       typeButton.style.color = types[type];
       typeButton.style.border = '1px solid transparent';
 
@@ -131,6 +143,8 @@ const showPokemon = (pokemonList, clear = false) => {
    updateCounter(pokemonList.length);
 };
 
+//Encargado de crear la "carta" pokémon y poder hacer el efecto visual de
+//dar la vuelta a la carta cuando el usuario da "click".
 const createCard = (pokemon) => {
    let pokemonElement = document.createElement('article');
    pokemonElement.classList.add('pokemon');
@@ -168,15 +182,31 @@ const createCard = (pokemon) => {
    frontCard.appendChild(typesElement);
 
    let backCard = document.createElement('div');
+   let legendario = pokemon.legendary ? 'Sí' : 'No';
+   let starter = pokemon.starter ? 'Sí' : 'No';
+   let mega = pokemon.mega ? 'Sí' : 'No';
+
    backCard.classList.add('pk-back');
    backCard.innerHTML = `
+         <div>
          <h4>Entrenador</h4>
-         <h6>${pokemon.trainer}</h6>
-         <h4>Legendario: </h4><span>${pokemon.legendary}</span>
-         <h4>Starter: </h4><span>${pokemon.starter}</span>
-         <h4>Mega: </h4><span>${pokemon.mega}</span>
+         <span>${pokemon.trainer}</span>
+         </div>
+         <div>
+         <h4>Legendario </h4>
+         <span>${legendario}</span>
+         </div>
+         <div>
+         <h4>Starter </h4>
+         <span>${starter}</span>
+         </div>
+         <div>
+         <h4>Mega </h4>
+         <span>${mega}</span>
+         </div>
       `;
 
+   //Volver a darle la vuelta a la carta una vez el ratón sale de ella.
    pokemonElement.addEventListener('mouseleave', (event) => {
       let img = event.target.querySelector('img');
       pokemonElement.classList.add('border-hoverOut');
@@ -189,6 +219,7 @@ const createCard = (pokemon) => {
       }
    });
 
+   //Darle la vuelta a la carta para ver información extra sobre el pokémon.
    pokemonElement.addEventListener('click', (event) => {
       let card = pokemonElement.querySelector('.pk-card');
       console.log('click');
@@ -208,6 +239,7 @@ const createCard = (pokemon) => {
    return pokemonElement;
 };
 
+//Muestra pokémon aleatorios como recomendación si no hay resultados al filtrar / buscar.
 const showRecommended = (show) => {
    let pokemonSection = document.querySelector('section.pokemons');
 
@@ -223,8 +255,9 @@ const showRecommended = (show) => {
       recommendedPokemon.classList.add('recommended');
 
       let randomPokemon = [];
-      for (let a = 0; a < 6; a++) {
-         let added = false;
+
+      //"For" para elegir pokémon que no sean repetidos.
+      for (let a = 0; a < 4; a++) {
          let number = Math.floor(Math.random() * pokemons.length);
          let pokemon = pokemons[number];
          if (!randomPokemon.includes(pokemon)) {
@@ -246,6 +279,17 @@ const showRecommended = (show) => {
    }
 };
 
+//Método auxiliar para poder limpiar completamente los filtros.
+const clearFilters = () => {
+   if (selectedTypeButton) {
+      selectType(selectedTypeButton, true);
+   }
+   searchInput.value = '';
+   showPokemon(pokemons, true);
+};
+
+//Método general para añadir otros listeners en general, como el borde de los filtros al
+//pasar el ratón por encima.
 const addGeneralListeners = () => {
    const filters = document.querySelector('.filters');
    filters.addEventListener('mouseleave', () => {
@@ -253,11 +297,13 @@ const addGeneralListeners = () => {
    });
 };
 
+//Resto de instrucciones para poder "montarlo" todo junto.
 searchInput.addEventListener('keyup', filter);
 clearSearch.addEventListener('click', () => {
    searchInput.value = '';
    filter();
 });
+clearFiltersInput.addEventListener('click', clearFilters);
 showPokemon(pokemons);
 showFilterTypes(types);
 updateCounter(pokemons.length);
